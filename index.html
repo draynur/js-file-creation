@@ -37,7 +37,7 @@
         <a href="#"><b>Try it out!</b></a>
     </div>
     <script id="sampleScript">
-        fetch("/whitney.json").then(async function (res) {
+        fetch(window.location.href + "whitney.json").then(async function (res) {
             const json_text = await res.text();
             console.log({json_text, res});
             const file = new File([json_text], 'whitney.json', {
