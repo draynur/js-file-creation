@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample File Creation</title>
+    <style>
+        body {
+            font-size: 24px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background: rgba(10, 20, 20, .9);
+            color: white;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        pre {
+            font-size: 1rem;
+            background: rgba(10, 20, 20, 1);
+            padding: 1rem 0;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Hello, World!</h2>
+        <p>This is an example of how to generate a file from a <i>String</i> and download it for the user on click.</p>
+        <div id="code-container"></div>
+        <a href="#"><b>Try it out!</b></a>
+    </div>
+    <script id="sampleScript">
+        fetch("/whitney.json").then(async function (res) {
+            const json_text = await res.text();
+            console.log({json_text, res});
+            const file = new File([json_text], 'whitney.json', {
+                type: 'application/json',
+            })
+
+            function download(event) {
+                const link = document.createElement('a')
+                const url = URL.createObjectURL(file)
+
+                link.href = url
+                link.download = file.name
+                document.body.appendChild(link)
+                link.click()
+
+                document.body.removeChild(link)
+                window.URL.revokeObjectURL(url)
+            }
+
+            const link_to_download_from = document.querySelector("a");
+
+            link_to_download_from.addEventListener("click", e => {
+                e.preventDefault();
+                download();
+            });
+        })
+    </script>
+    <script>
+        const script = document.getElementById("sampleScript");
+        const container = document.getElementById("code-container");
+        const script_pre = document.createElement("pre");
+        const script_code = document.createElement("code")
+        const script_contents = document.createTextNode(script.innerText);
+
+        script_code.innerText = script_contents.data;
+        script_pre.appendChild(script_code);
+        container.appendChild(script_pre);
+    </script>
+</body>
+
+</html>
